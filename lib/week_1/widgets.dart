@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class FlatOvalButton extends StatelessWidget {
   final Color color;
+  final Color splashColor;
   final String text;
   final double yPadding;
   final double xPadding;
@@ -9,6 +10,7 @@ class FlatOvalButton extends StatelessWidget {
   const FlatOvalButton({
     Key key,
     this.color,
+    this.splashColor,
     this.text,
     this.onPressed,
     this.xPadding,
@@ -19,7 +21,8 @@ class FlatOvalButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       color: color,
-      splashColor: Colors.white10,
+      splashColor: Colors.transparent,
+      highlightColor: splashColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(30)),
       ),
@@ -40,10 +43,10 @@ class UserIdTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       autofocus: false,
-      cursorColor: Colors.deepOrange,
+      cursorColor: Colors.deepOrange.shade300,
       decoration: InputDecoration(
         fillColor: Colors.white,
-        labelStyle: TextStyle(color: Colors.orange.shade400),
+        labelStyle: TextStyle(color: Colors.deepOrange.shade200),
         contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         labelText: "Email or Phone Number",
         border: InputBorder.none,
@@ -64,7 +67,7 @@ class PasswordTextField extends StatelessWidget {
       decoration: InputDecoration(
         fillColor: Colors.white,
         contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        labelStyle: TextStyle(color: Colors.orange.shade400),
+        labelStyle: TextStyle(color: Colors.deepOrange.shade200),
         labelText: "Password",
         border: InputBorder.none,
       ),
@@ -84,7 +87,7 @@ class LoginFields extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10)),
         boxShadow: [
           BoxShadow(
-            color: Colors.orangeAccent.shade100,
+            color: Colors.deepOrange.shade100,
             blurRadius: 8,
             offset: Offset(0, 4),
           ),
@@ -93,7 +96,7 @@ class LoginFields extends StatelessWidget {
       child: Column(
         children: [
           UserIdTextField(),
-          Divider(),
+          Divider(color: Colors.deepOrange.shade100),
           PasswordTextField(),
         ],
       ),

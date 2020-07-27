@@ -8,7 +8,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.deepOrange,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.light,
     ));
@@ -42,17 +42,20 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     _textStyleAnim = TextStyleTween(
       begin: TextStyle(color: Colors.deepOrange, fontSize: 0.0),
       end: TextStyle(color: Colors.white, fontSize: 54.0)
-    ).animate(_controller)..addListener(() {setState(() {});});
+    ).animate(new CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    ))..addListener(() => setState(() {}));
     _slideAnim = new Tween<Offset>(
       begin: Offset(0.0, 1.0),
       end: Offset.zero
     ).animate(
       new CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut,
+        curve: Curves.easeOut,
       )
     );
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       _controller.forward();
     });
   }
@@ -67,6 +70,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     Size _deviceDimensions = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -117,15 +121,22 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     LoginFields(),
-                    Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
+                    FlatButton(
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
                       ),
+                      color: Colors.white,
+                      highlightColor: Colors.orange.withOpacity(0.1),
+                      splashColor: Colors.transparent,
+                      onPressed: (){},
                     ),
                     FlatOvalButton(
-                      color: Colors.deepOrange,
+                      color: Colors.orange.shade800,
+                      splashColor: Colors.orange,
                       onPressed: () {},
                       text:  "Login",
                       yPadding: 20,
@@ -144,6 +155,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                       children: [
                         FlatOvalButton(
                           color: Colors.blueAccent,
+                          splashColor: Colors.white12,
                           onPressed: () {},
                           text: "Facebook",
                           yPadding: 15, 
@@ -151,6 +163,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                         ),
                         FlatOvalButton(
                           color: Colors.black,
+                          splashColor: Colors.white12,
                           onPressed: () {},
                           text: " Github ",
                           yPadding: 15, 
