@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class MenuIcon extends StatelessWidget {
@@ -18,7 +20,7 @@ class MenuIcon extends StatelessWidget {
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(left: 15, right: 4, top: 6),
+          margin: const EdgeInsets.only(left: 15, right: 6, top: 6),
           height: 3.5,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -101,7 +103,7 @@ class FloatingBottomNavBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF373737).withOpacity(0.9),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(18),
       ),
       width: MediaQuery.of(context).size.width*0.8,
       child: Row(
@@ -158,7 +160,7 @@ class TopChip extends StatelessWidget {
   }
 }
 
-class BigItemCard extends StatelessWidget {
+class BigItemCard extends StatefulWidget {
   final String imageUrl;
   final String name;
   final String byUser;
@@ -172,6 +174,13 @@ class BigItemCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _BigItemCardState createState() => _BigItemCardState();
+}
+
+class _BigItemCardState extends State<BigItemCard> {
+  bool _added = false;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(4),
@@ -180,17 +189,6 @@ class BigItemCard extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Hero(
-              tag: imageUrl,
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.fitHeight,
-                height: MediaQuery.of(context).size.width*0.7,
-              ),
-            ),
-          ),
           Container(
             padding: const EdgeInsets.all(18),
             height: MediaQuery.of(context).size.width*0.75,
@@ -205,7 +203,7 @@ class BigItemCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  name,
+                  widget.name,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -213,7 +211,7 @@ class BigItemCard extends StatelessWidget {
                 ),
                 SizedBox(height: 3),
                 Text(
-                  byUser,
+                  widget.byUser,
                   style: TextStyle(
                     color: Colors.white60,
                     fontSize: 15,
@@ -224,19 +222,47 @@ class BigItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      price,
+                      widget.price,
                       style: TextStyle(
                         color: Colors.yellow,
                         fontSize: 26,
                       ),
                     ),
-                    TileButton(
-                      clicked: true,
-                      icon: Icons.add_shopping_cart,
+                    GestureDetector(
+                      onTap: () {
+                        final _snackBar = SnackBar(
+                          content: Text(
+                            "${widget.name} ${_added ? "removed from" :"added to"} your cart",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                        Scaffold.of(context).showSnackBar(_snackBar);
+                        setState(() {
+                          _added = !_added;
+                        });
+                      },
+                      child: TileButton(
+                        clicked: true,
+                        icon: _added ? Icons.remove_shopping_cart :Icons.add_shopping_cart,
+                      ),
                     ),
                   ],
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Hero(
+              tag: widget.imageUrl,
+              child: Image.asset(
+                widget.imageUrl,
+                fit: BoxFit.fitHeight,
+                height: MediaQuery.of(context).size.width*0.7,
+              ),
             ),
           ),
         ],
@@ -263,14 +289,6 @@ class SmallItemCard extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Image.asset(
-              imageUrl,
-              fit: BoxFit.fitHeight,
-              height: MediaQuery.of(context).size.width*0.43,
-            ),
-          ),
           Container(
             padding: const EdgeInsets.all(15),
             height: MediaQuery.of(context).size.width*0.42,
@@ -294,14 +312,29 @@ class SmallItemCard extends StatelessWidget {
               ],
             ),
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Image.asset(
+              imageUrl,
+              fit: BoxFit.fitHeight,
+              height: MediaQuery.of(context).size.width*0.43,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class QuantitySelector extends StatelessWidget {
+class QuantitySelector extends StatefulWidget {
   const QuantitySelector({Key key}) : super(key: key);
+
+  @override
+  _QuantitySelectorState createState() => _QuantitySelectorState();
+}
+
+class _QuantitySelectorState extends State<QuantitySelector> {
+  int _quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -316,20 +349,23 @@ class QuantitySelector extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.white30,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                "--",
-                style: TextStyle(
-                  color: Colors.white,
-                  letterSpacing: -10,
-                  fontSize: 36,
+          GestureDetector(
+            onTap: () => setState(() => _quantity <= 1 ? 1: _quantity--),
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white30,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  "--",
+                  style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: -10,
+                    fontSize: 36,
+                  ),
                 ),
               ),
             ),
@@ -339,7 +375,7 @@ class QuantitySelector extends StatelessWidget {
             width: 50,
             child: Center(
               child: Text(
-                "1",
+                _quantity.toString(),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30,
@@ -347,18 +383,21 @@ class QuantitySelector extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                "+",
-                style: TextStyle(
-                  fontSize: 36,
+          GestureDetector(
+            onTap: () => setState(() => _quantity++),
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  "+",
+                  style: TextStyle(
+                    fontSize: 36,
+                  ),
                 ),
               ),
             ),

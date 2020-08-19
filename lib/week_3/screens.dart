@@ -23,12 +23,13 @@ class _ProductPageState extends State<ProductPage> {
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black.withOpacity(0.9), Colors.black],
+            colors: [Color(0xFF222222), Colors.black.withOpacity(0.94)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: SafeArea(
+          minimum: EdgeInsets.only(bottom: 25, top: 5),
           child: Column(
             children: [
               Flexible(
@@ -49,7 +50,7 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                     ),
                     BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 40, sigmaY: 10),
+                      filter: ImageFilter.blur(sigmaX: 100, sigmaY: 12),
                       child: Container(
                         height: double.infinity,
                         margin: const EdgeInsets.fromLTRB(20, 10, 20, 90),
@@ -148,7 +149,16 @@ class _ProductPageState extends State<ProductPage> {
                           Container(
                             height: 60,
                             width: MediaQuery.of(context).size.width*0.45,
-                            color: Color(0xFF060606),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF151515),
+                                  Color(0xFF141414),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )
+                            ),
                             child: Center(
                               child: Text(
                                 widget.product['price'],

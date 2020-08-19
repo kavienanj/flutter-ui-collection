@@ -47,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.9),
+        backgroundColor: Color(0xFF222222),
         elevation: 0,
         leading: MenuIcon(),
         title: Text(
@@ -59,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
         centerTitle: false,
         actions: [
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 22),
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.black.withOpacity(0.9), Colors.black],
+                colors: [Color(0xFF222222), Colors.black.withOpacity(0.94)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               )
@@ -191,6 +191,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           SafeArea(
+            minimum: EdgeInsets.only(bottom: 30),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: FloatingBottomNavBar(
