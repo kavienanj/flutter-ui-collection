@@ -26,7 +26,7 @@ Then run `Flutter run` command to see the design in your desired device.
 - Note :- Some designs are not responsive. Designs fits best in large and long screens (IPhone X and above, Samsung Galaxy S7 and above).
 
 ## Contribute
-I appreciate your contributions for the code. Make sure to open an issue and mention the issue and solution.
+I appreciate your contributions for this project. Make sure to open an issue and mention the issue clearly and your solution before pushing.
 
 ### Thank You,
 I am Kavienan J, from Sri Lanka. Programmer with Mac and Coffee! keep watching every week to explore a new design.
