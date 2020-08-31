@@ -19,7 +19,7 @@ This project is made of Flutter! If new to flutter follow, [Flutter online docum
 Go to `main.dart` file, and change the import statement to your desired week's design!
 
 ```dart
-import "import 'package:ui_challege/week_${Your desired week number}/main_app.dart';"
+import 'package:ui_challege/week_${Your desired week number}/main_app.dart';"
 ```
 
 Then run `Flutter run` command to see the design in your desired device. 
