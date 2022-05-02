@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ui_challege/week_3/screens.dart';
+import 'package:ui_challege/week_3/screens/cart.dart';
 import 'package:ui_challege/week_3/widgets.dart';
+import 'screens/home.dart';
+import 'screens/liked.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({Key key}) : super(key: key);
@@ -23,25 +25,10 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final chips = ["Vaccine", "Sanitizer", "Mask", "Gloves", "Soap", "Germicides"];
-  final bigItems = [
-    {
-      "image": "assets/week_3/pro-vac.png",
-      "name": "Pro-Vac Venco",
-      "by": "by baximco",
-      "price": "\$34.50",
-    },
-    {
-      "image": "assets/week_3/live-b1.png",
-      "name": "Disease Vaccine",
-      "by": "by B1 Strain",
-      "price": "\$21.44",
-    },
-  ];
-  final navItems = [Icons.home, Icons.favorite_border, Icons.search, Icons.shopping_basket];
-  var _selectedChip = "Vaccine";
-  var _bottomNavIndex = 0;
-  var _extended = false;
+
+  final _navItems = [Icons.home, Icons.favorite_border, Icons.search, Icons.shopping_basket];
+  final List<Widget> _views = [HomeView(), LikedView(), HomeView(), CartView()];
+  var _bottomNavIndex = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
         elevation: 0,
         leading: MenuIcon(),
         title: Text(
-          "Home", 
+          "MEDotar", 
           style: TextStyle(
             fontSize: 28,
           ),
@@ -86,116 +73,14 @@ class _MainScreenState extends State<MainScreen> {
                 end: Alignment.bottomCenter,
               )
             ),
-            child: ListView(
-              children: [
-                Container(
-                  height: 60,
-                  margin: const EdgeInsets.only(left: 4, top: 10),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: chips.map((name) {
-                      return TopChip(
-                        clicked: name == _selectedChip, 
-                        text: name,
-                        onClick: () => setState(() {
-                          _selectedChip = name;
-                        }),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Container(
-                  height: 380,
-                  margin: const EdgeInsets.only(left: 4, top: 10),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: bigItems.map((item) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => ProductPage(product: item),
-                          )),
-                          child: BigItemCard(
-                            name: item['name'],
-                            imageUrl: item['image'],
-                            byUser: item['by'],
-                            price: item['price'],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 30, 16, 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Sanitization",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => setState(() => _extended = !_extended),
-                        child: Text(
-                        !_extended ? "All": "Less",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(4,4,4, _extended ? 4: 50),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SmallItemCard(
-                        name: "Mask",
-                        imageUrl: "assets/week_3/kn95-mask.png",
-                      ),
-                      SmallItemCard(
-                        name: "Gloves",
-                        imageUrl: "assets/week_3/gloves.png",
-                      ),
-                    ],
-                  ),
-                ),
-                if (_extended) Padding(
-                  padding: const EdgeInsets.fromLTRB(4,0,4,50),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SmallItemCard(
-                        name: "Vaccines",
-                        imageUrl: "assets/week_3/live-b1.png",
-                      ),
-                      SmallItemCard(
-                        name: "Syrubs",
-                        imageUrl: "assets/week_3/pro-vac.png",
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            child: _views[_bottomNavIndex],
           ),
           SafeArea(
             minimum: EdgeInsets.only(bottom: 30),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: FloatingBottomNavBar(
-                icons: navItems,
+                icons: _navItems,
                 clicked: _bottomNavIndex,
                 onPressed: (i) => setState(() => _bottomNavIndex = i),
               ),

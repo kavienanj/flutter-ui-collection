@@ -1,9 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:ui_challege/week_3/widgets.dart';
+import './models/medicine.dart';
 
 class ProductPage extends StatefulWidget {
-  final Map product;
+  final Product product;
   const ProductPage({this.product, Key key}) : super(key: key);
 
   @override
@@ -43,7 +44,7 @@ class _ProductPageState extends State<ProductPage> {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Image.asset(
-                          widget.product['image'],
+                          widget.product.image,
                           fit: BoxFit.fitHeight,
                           height: double.infinity,
                         ),
@@ -63,9 +64,9 @@ class _ProductPageState extends State<ProductPage> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Hero(
-                        tag: widget.product['image'],
+                        tag: widget.product.image+widget.product.name,
                         child: Image.asset(
-                          widget.product['image'],
+                          widget.product.image,
                           fit: BoxFit.fitHeight,
                           height: double.infinity,
                         ),
@@ -113,7 +114,7 @@ class _ProductPageState extends State<ProductPage> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        widget.product['name'],
+                        widget.product.name,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 28,
@@ -121,7 +122,7 @@ class _ProductPageState extends State<ProductPage> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        widget.product['by'],
+                        widget.product.manufacture,
                         style: TextStyle(
                           color: Colors.white60,
                           fontSize: 16,
@@ -161,7 +162,7 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                             child: Center(
                               child: Text(
-                                widget.product['price'],
+                                widget.product.price,
                                 style: TextStyle(
                                   color: Colors.yellow,
                                   fontSize: 32,

@@ -1,6 +1,6 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import './models/medicine.dart';
 
 class MenuIcon extends StatelessWidget {
   const MenuIcon({Key key}) : super(key: key);
@@ -161,15 +161,9 @@ class TopChip extends StatelessWidget {
 }
 
 class BigItemCard extends StatefulWidget {
-  final String imageUrl;
-  final String name;
-  final String byUser;
-  final String price;
+  final Product product;
   const BigItemCard({
-    this.imageUrl,
-    this.name,
-    this.byUser,
-    this.price,
+    this.product,
     Key key,
   }) : super(key: key);
 
@@ -178,10 +172,10 @@ class BigItemCard extends StatefulWidget {
 }
 
 class _BigItemCardState extends State<BigItemCard> {
-  bool _added = false;
 
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
     return Container(
       margin: const EdgeInsets.all(4),
       height: MediaQuery.of(context).size.width*0.9,
@@ -191,7 +185,7 @@ class _BigItemCardState extends State<BigItemCard> {
         children: [
           Container(
             padding: const EdgeInsets.all(18),
-            height: MediaQuery.of(context).size.width*0.75,
+            height: MediaQuery.of(context).size.width*0.8,
             width: MediaQuery.of(context).size.width*0.6,
             decoration: BoxDecoration(
               color: Colors.white12,
@@ -203,18 +197,20 @@ class _BigItemCardState extends State<BigItemCard> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  widget.name,
+                  product.name,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 22,
+                    fontSize: 24,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
                 ),
                 SizedBox(height: 3),
                 Text(
-                  widget.byUser,
+                  product.manufacture,
                   style: TextStyle(
                     color: Colors.white60,
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
                 Row(
@@ -222,7 +218,7 @@ class _BigItemCardState extends State<BigItemCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.price,
+                      product.price,
                       style: TextStyle(
                         color: Colors.yellow,
                         fontSize: 26,
@@ -230,9 +226,10 @@ class _BigItemCardState extends State<BigItemCard> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        Scaffold.of(context).removeCurrentSnackBar();
                         final _snackBar = SnackBar(
                           content: Text(
-                            "${widget.name} ${_added ? "removed from" :"added to"} your cart",
+                            "${product.name} ${product.isInCart ? "removed from" :"added to"} your cart",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -241,12 +238,16 @@ class _BigItemCardState extends State<BigItemCard> {
                         );
                         Scaffold.of(context).showSnackBar(_snackBar);
                         setState(() {
-                          _added = !_added;
+                          product.isInCart ? 
+                            product.removeFromCart()  
+                            : product.addToCart();
                         });
                       },
                       child: TileButton(
                         clicked: true,
-                        icon: _added ? Icons.remove_shopping_cart :Icons.add_shopping_cart,
+                        icon: product.isInCart ? 
+                          Icons.remove_shopping_cart 
+                          : Icons.add_shopping_cart,
                       ),
                     ),
                   ],
@@ -257,11 +258,11 @@ class _BigItemCardState extends State<BigItemCard> {
           Align(
             alignment: Alignment.topCenter,
             child: Hero(
-              tag: widget.imageUrl,
+              tag: product.image+product.name,
               child: Image.asset(
-                widget.imageUrl,
+                product.image,
                 fit: BoxFit.fitHeight,
-                height: MediaQuery.of(context).size.width*0.7,
+                height: MediaQuery.of(context).size.width*0.65,
               ),
             ),
           ),
@@ -361,6 +362,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
               child: Center(
                 child: Text(
                   "--",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     letterSpacing: -10,
@@ -376,6 +378,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
             child: Center(
               child: Text(
                 _quantity.toString(),
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30,
@@ -395,6 +398,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
               child: Center(
                 child: Text(
                   "+",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 36,
                   ),
@@ -402,6 +406,189 @@ class _QuantitySelectorState extends State<QuantitySelector> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class SmallQuantitySelector extends StatefulWidget {
+  const SmallQuantitySelector({Key key}) : super(key: key);
+
+  @override
+  _SmallQuantitySelectorState createState() => _SmallQuantitySelectorState();
+}
+
+class _SmallQuantitySelectorState extends State<SmallQuantitySelector> {
+  int _quantity = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 130,
+      decoration: BoxDecoration(
+        //color: Colors.white12,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.all(5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => setState(() => _quantity <= 1 ? 1: _quantity--),
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Center(
+                child: Text(
+                  "--",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: -10,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 30,
+            width: 30,
+            child: Center(
+              child: Text(
+                _quantity.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => setState(() => _quantity++),
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Center(
+                child: Text(
+                  "+",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CartItemCard extends StatelessWidget {
+  final int count;
+  final Product product;
+  const CartItemCard({this.count, this.product, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        // color: Colors.white12,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Image.asset(
+                  product.image,
+                  alignment: Alignment.center,
+                  fit: BoxFit.fitHeight,
+                  height: MediaQuery.of(context).size.width*0.4,
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      product.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 17,
+                          color: Colors.yellow,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(text: product.price),
+                          TextSpan(
+                            text: " x 8 = ", 
+                            style: TextStyle(
+                              color: Colors.white60,
+                              fontWeight: FontWeight.w300
+                            )
+                          ),
+                          TextSpan(
+                            text: "\$"+(double.parse(product.price.substring(1))*8).toString(),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    SmallQuantitySelector(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.info_outline_rounded,
+                  color: Colors.white70,
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.remove_shopping_cart_outlined,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
